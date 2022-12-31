@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<style>
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #D8D8D8;
+/*  background-image: url("");*/
+  font-size:80%;
+  font-family:Arial, Helvetica, sans-serif;
+  line-height:1.6em;
+  color:#333;
+}    
+.nav_item {
+    float: left;
+    margin-top: 7px;
+}
+
+.nav_item a {
+    font-family: Arial;
+    height: 32px;
+    line-height: 32px;
+    font-size: 13px; 
+    font-weight: bold;
+    text-decoration: none;
+    margin-left: 7px;
+    margin-right: 7px;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top: 10px;
+    padding-bottom: 10px;  
+    border-radius: 6px;
+    text-decoration: none;   
+    color: #222;
+}
+
+.nav_item a:hover {
+    color: white;
+}
+
+iframe {
+border:none;
+margin:auto;
+width:100%;
+height:800px;
+overflow:hidden;
+}
+</style>
+<div id="nav_home">
+
+   <div class="nav_item">
+     <a href="#" onclick="show('daily.php')">Daily</a>
+   </div>
+
+   <div class="nav_item">
+     <a href="#" onclick="show('monthly.php')">Monthly</a>
+   </div>
+
+   <div class="nav_item">
+     <a href="#" onclick="show('yearly.php')">Yearly</a>
+   </div>
+
+   <div class="nav_item">
+     <a href="#" onclick="show('yearly.php')">Cryptogram Maker</a>
+   </div>
+
+   <div class="nav_item">
+     <a href="browse.html">Browse</a>
+   </div>
+
+   <div class="nav_item">
+     <a href="../main.php">More Puzzles</a>
+   </div>
+   
+   
+</div>
+<iframe src="" id="mainframe"><p>browser does not support iframes.</p></iframe>
+<a href="#" onclick="isolate()">isolate</a>
+<script>
+let savedfile = 0;
+function show(file) {
+document.getElementById("mainframe").src=file;
+savedfile = file;
+}
+
+function isolate() {
+window.open(savedfile, '_blank');
+}
+
+</script>
+</body>
+</html>
