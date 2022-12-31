@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cryptograms</title>
+<style>
+.cell {
+width:12px;
+margin-right:5px;
+font-family: monospace, monospace;
+}
+.cell:focus{
+background-color:gray;
+color:transparent;
+}
+#ciphertext, .ciphermore {
+letter-spacing:11px;
+width:120%;
+text-align: center;
+font-family: monospace, monospace;
+display:block;
+}
+
+table {
+border-collapse: separate;
+text-indent: initial;
+border-spacing:2px;
+}
+
+td {
+display:table-cell;
+}
+
+#parent {
+white-space: nowrap;
+float:left;
+margin-right:12px;
+}
+
+</style>
+</head>
+<body>
+
+<div id="parent">
+<table border="0" cellspacing="2" cellpadding="0">
+<tbody id="tb">
+
+</tr>
+</tbody>
+</table>
+</div>
+<script>
+function setCharAt(str,index,chr) {
+    if(index > str.length-1) return str;
+    return str.substring(0,index) + chr + str.substring(index+1);
+}
+
+function encipher(string) {
+let arr = [];
+let newchars = [];
+for (let i = 0; i < string.length; i++) {
+if (arr.indexOf(string[i]) < 0 && string[i] != ',' && string[i] != '!' && string[i] != ' ' && string[i] != '\'') arr.push(string[i]);
+}
+for (let i = 0; i < arr.length; i++) {
+do {
+c = String.fromCharCode(Math.floor(Math.random() * 26) + 65); }
+while (newchars.indexOf(c) >= 0);
+newchars[i] = c;
+}
+string[string.indexOf(arr[1])] = newchars[1];
+for (let n = 0; n < newchars.length; n++) {
+for (let i = 0; i < string.length; i++) {
+if (string.charAt(i) == arr[n]) string= setCharAt(string, i, newchars[n]);
+}
+}
+return string;
+}
+
+let phrase = "don\'t forget to wash your hands and brush teeth!";
+let ciphtext = encipher(phrase);
+//let ciphid = document.getElementById("ciphertext");
+let ciphmore = [];
+let inp = [];
+let td = [];
+let tr = [];
+let index = 0;
+
+
+let i = 0;
+for (let g = 0; index < ciphtext.length; g++) {
+let n = 8; while (ciphtext[index+n] && ciphtext[index+(++n)] != " " && ciphtext[index+n] != "\f" && ciphtext[index+n] != "\r" && ciphtext[index+n] != "\n");
+if (ciphtext.length - index <= 8) n = ciphtext.length - index;
+tr[g] = document.createElement("tr");
+for (let i = 0; i < n; i++) {
+td[index] = document.createElement("td");
+ciphmore[index] = document.createElement("h2");
+ciphmore[index].innerHTML = ciphtext[index];
+ciphmore[index].classList.add("ciphermore");
+td[index].appendChild(ciphmore[index]);
+if (i == 0 && ciphtext[index] == " ") { index++; continue;}
+inp[index] = document.createElement("input");
+inp[index].maxLength = 1;
+inp[index].onfocus = highlightall;
+inp[index].classList.add("cell");
+td[index].appendChild(inp[index]);
+if (ciphtext[index] == " ") inp[index].style.visibility="hidden";
+td[index].valign="top";
+td[index].align="center";
+
+if (ciphtext[index] == "\'") inp[index].style.visibility = 'hidden';
+if (ciphtext[index] == "!") inp[index].style.visibility = 'hidden';
+
+
+tr[g].appendChild(td[index]);
+//if (ciphmore[index].innerHTML == " " && typeof(inp[index]) !== 'undefined') inp[index].style.color = 'red';
+index++;
+}
+document.getElementById("tb").appendChild(tr[g]);
+}
+
+var container = document.getElementsByClassName("cell");
+
+for (let i = 0; i < container.length; i++) {
+container[i].onkeydown = function(e) {
+if (e.keyCode >= 65 && e.keyCode < 122 || e.keyCode == 8) {
+e.srcElement.value = String.fromCharCode(e.keyCode);
+if (e.srcElement.parentElement.nextElementSibling) {
+let next = e.srcElement.parentElement.nextElementSibling.children[1];
+while (next.style.visibility == "hidden" && next.parentElement.nextElementSibling) next = next.parentElement.nextElementSibling.children[1];
+for (let g = 0; g < container.length; g++) if (e.srcElement.parentElement.children[0].innerHTML == container[g].parentElement.children[0].innerHTML) container[g].value = e.srcElement.value;
+
+while (next.value.charCodeAt(0) >= 65 || next.style.visibility=="hidden") {
+if (nextt=next.parentElement.nextElementSibling) next = nextt.children[1];
+else if (nextt=next.parentElement.parentElement.nextElementSibling) next = nextt.children[0].children[1];
+else break;
+}
+if (next.value < 65) next.value = " ";
+next.focus();
+}
+else if ((nextr=e.srcElement.parentElement.parentElement.nextElementSibling)) {
+nextr.children[0].children[1].value = " ";
+nextr.children[0].children[1].focus();
+}
+}
+}
+}
+
+
+function check() {
+let n = 0;
+for (let i = 0; i < container.length; i++) {
+if (phrase[n] == " " && !(container[i-1].parentElement.nextElementSibling)) n++;
+if (container[i].value.toLowerCase() != phrase[n] && container[i].style.visibility!="hidden") container[i].style.backgroundColor = "red";
+else container[i].style.backgroundColor = "white";
+n++
+}
+}
+
+function highlightall(x) {
+let letter = x.target.parentElement.children[0].innerHTML;
+for (let i = 0; i < container.length; i++) {
+let lettern = container[i].parentElement.children[0].innerHTML;
+if (lettern == letter) container[i].style.backgroundColor="#B0B0B0";
+else container[i].style.backgroundColor="white";
+}
+}
+</script>
+<button onclick="check()">check</button>
+</body>
+</html>
